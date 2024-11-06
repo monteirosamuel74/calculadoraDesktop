@@ -3,20 +3,23 @@ import java.awt.Label;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JTextField;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;import
 
-public final class TelaPerson extends JFrame {
+class Operadores;
+
+public final class CalculadoraDesktop extends JFrame {
 
     JTextField textoField1 = new JTextField();
-    String operadores[]={"+ (somar)","- (subtrair)","x (multiplicar)",": (dividir)"};
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    JComboBox comboBox = new JComboBox(operadores);
+    JComboBox comboBox = new Operadores(sinal, descricao);
     JTextField textoField2 = new JTextField();
     JButton calcular = new JButton();
     JButton limpar = new JButton();
     Label resultado = new Label();
 
-    public TelaPerson() {
+    public CalculadoraDesktop() {
         super();
         iniciarTela();
     }
@@ -28,17 +31,14 @@ public final class TelaPerson extends JFrame {
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        
 
-        
         textoField1.setBounds(10, 20, 260, 30);
         textoField1.setText("Somente números");
         this.add(textoField1);
 
-        
         comboBox.setName("Operadores");
         comboBox.setBounds(10, 70, 260, 30);
-        //comboBox.setSelectedIndex(3);
+        // comboBox.setSelectedIndex(3);
         this.add(comboBox);
 
         textoField2.setBounds(10, 120, 260, 30);
@@ -47,6 +47,11 @@ public final class TelaPerson extends JFrame {
 
         calcular.setBounds(10, 200, 100, 30);
         calcular.setText("Calcular");
+        calcular.addActionListener(e->{
+            if (comboBox == "+") {
+                
+            }
+        });
         this.add(calcular);
 
         limpar.setBounds(120, 200, 100, 30);
@@ -62,14 +67,24 @@ public final class TelaPerson extends JFrame {
     }
 
     public static void main(String[] args) {
-        new TelaPerson();
+        new CalculadoraDesktop();
     }
 
-    public void JtextFieldSomenteNumeros() {
-        addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override
-    public void keyTyped(java.awt.event.KeyEvent evt) {
-        jTextFieldKeyTyped(evt);}});
+    boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
+
+    boolean validaFormulario(String str) {
+        if (!isNumeric(str)) {
+            JOptionPane.showMessageDialog(null,"O campo só pode ser numérico.");
+            textoField1.requestFocus();
+            return false;
+        }
+    }    
 
 }
