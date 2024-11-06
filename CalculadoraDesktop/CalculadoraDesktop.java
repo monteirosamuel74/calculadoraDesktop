@@ -1,19 +1,19 @@
 import java.awt.Color;
 import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;import
+import javax.swing.JTextField;
 
-class Operadores;
-
-public final class CalculadoraDesktop extends JFrame {
+public class CalculadoraDesktop extends JFrame {
 
     JTextField textoField1 = new JTextField();
-
+    String operadores[]={"+","-","x",":"};
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    JComboBox comboBox = new Operadores(sinal, descricao);
+    JComboBox comboBox = new JComboBox(operadores);
     JTextField textoField2 = new JTextField();
     JButton calcular = new JButton();
     JButton limpar = new JButton();
@@ -33,7 +33,6 @@ public final class CalculadoraDesktop extends JFrame {
         this.setResizable(false);
 
         textoField1.setBounds(10, 20, 260, 30);
-        textoField1.setText("Somente números");
         this.add(textoField1);
 
         comboBox.setName("Operadores");
@@ -42,20 +41,57 @@ public final class CalculadoraDesktop extends JFrame {
         this.add(comboBox);
 
         textoField2.setBounds(10, 120, 260, 30);
-        textoField2.setText("Somente números");
         this.add(textoField2);
 
         calcular.setBounds(10, 200, 100, 30);
         calcular.setText("Calcular");
-        calcular.addActionListener(e->{
-            if (comboBox == "+") {
-                
+        calcular.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    double num1 = Double.parseDouble(textoField1.getText());
+                    double num2 = Double.parseDouble(textoField2.getText());
+                    String operador = (String) comboBox.getSelectedItem();
+                    double res = 0;
+                    
+                    switch (operador) {
+                        case "+":
+                            res = num1 + num2;
+                            break;
+                        case "-":
+                            res = num1 - num2;
+                            break;
+                        case "x":
+                            res = num1 * num2;
+                            break;
+                        case ":":
+                            if (num2 != 0) {
+                                res = num1 / num2;
+                            } else {
+                                resultado.setText("Erro: Divisão por zero");
+                                return;
+                            }
+                            break;
+                        }
+                        
+                        resultado.setText("Resultado: " + res);
+                } catch (NumberFormatException ex) {
+                    resultado.setText("Erro: Entrada inválida");
+                }
             }
+
         });
         this.add(calcular);
 
         limpar.setBounds(120, 200, 100, 30);
         limpar.setText("Limpar");
+        limpar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                textoField1.setText("");
+                textoField2.setText("");
+                resultado.setText("");
+            }
+        });
         this.add(limpar);
 
         resultado.setBounds(10, 160, 260, 30);
@@ -80,11 +116,17 @@ public final class CalculadoraDesktop extends JFrame {
     }
 
     boolean validaFormulario(String str) {
-        if (!isNumeric(str)) {
-            JOptionPane.showMessageDialog(null,"O campo só pode ser numérico.");
+        if (!isNumeric(textoField1.getText())) {
+            JOptionPane.showMessageDialog(null, "O campo só pode ser numérico.");
             textoField1.requestFocus();
             return false;
         }
-    }    
+        if (!isNumeric(textoField2.getText())) {
+            JOptionPane.showMessageDialog(null, "O campo só pode ser numérico.");
+            textoField1.requestFocus();
+            return false;
+        }
+        return true;
+    }
 
 }
